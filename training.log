@@ -1,0 +1,406 @@
+aistudio@jupyter-91289-1899550:~/PSENet$ python train.py config/psenet/psenet_r50_ic15_1024_finetune.py --resume checkpoints/psenet_r50_ic15_1024_finetune/checkpoint_530ep.pdparams
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/layers/utils.py:26: DeprecationWarning: `np.int` is a deprecated alias for the builtin `int`. To silence this warning, use `int` by itself. Doing this will not modify any behavior and is safe. When replacing `np.int`, you may wish to use e.g. `np.int64` or `np.int32` to specify the precision. If you wish to review your current use, check the release note link for additional information.
+Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+  def convert_to_list(value, n, name, dtype=np.int):
+{
+    "model": {
+        "type": "PSENet",
+        "backbone": {
+            "type": "resnet50",
+            "pretrained": true
+        },
+        "neck": {
+            "type": "FPN",
+            "in_channels": [
+                256,
+                512,
+                1024,
+                2048
+            ],
+            "out_channels": 128
+        },
+        "detection_head": {
+            "type": "PSENet_Head",
+            "in_channels": 1024,
+            "hidden_dim": 256,
+            "num_classes": 7,
+            "loss_text": {
+                "type": "DiceLoss",
+                "loss_weight": 0.7
+            },
+            "loss_kernel": {
+                "type": "DiceLoss",
+                "loss_weight": 0.3
+            }
+        }
+    },
+    "data": {
+        "batch_size": 16,
+        "train": {
+            "type": "PSENET_IC15",
+            "split": "train",
+            "is_transform": true,
+            "img_size": 736,
+            "short_size": 1024,
+            "kernel_num": 7,
+            "min_scale": 0.4,
+            "read_type": "cv2"
+        },
+        "test": {
+            "type": "PSENET_IC15",
+            "split": "test",
+            "short_size": 1024,
+            "read_type": "cv2"
+        }
+    },
+    "train_cfg": {
+        "lr": 0.001,
+        "schedule": [
+            200,
+            400
+        ],
+        "epoch": 580,
+        "optimizer": "SGD"
+    },
+    "test_cfg": {
+        "min_score": 0.85,
+        "min_area": 16,
+        "kernel_num": 7,
+        "bbox_type": "rect",
+        "result_path": "outputs/submit_ic15.zip"
+    }
+}
+Checkpoint path: checkpoints/psenet_r50_ic15_1024_finetune.
+W0511 00:08:20.889780   554 device_context.cc:362] Please NOTE: device: 0, GPU Compute Capability: 7.0, Driver API Version: 10.1, Runtime API Version: 10.1
+W0511 00:08:20.893760   554 device_context.cc:372] device: 0, cuDNN Version: 7.6.
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/tensor/creation.py:143: DeprecationWarning: `np.object` is a deprecated alias for the builtin `object`. To silence this warning, use `object` by itself. Doing this will not modify any behavior and is safe. 
+Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+  if data.dtype == np.object:
+2021-05-11 00:08:23,636 - INFO - unique_endpoints {''}
+2021-05-11 00:08:23,636 - INFO - Downloading resnet50.pdparams from https://paddle-hapi.bj.bcebos.com/models/resnet50.pdparams
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 151272/151272 [00:03<00:00, 45222.22it/s]
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for conv1.weight. conv1.weight receives a shape [64, 3, 7, 7], but the expected shape is [64, 3, 3, 3].
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for conv2.weight. conv2.weight is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for bn2.weight. bn2.weight is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for bn2.bias. bn2.bias is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for bn2._mean. bn2._mean is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for bn2._variance. bn2._variance is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for conv3.weight. conv3.weight is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for bn3.weight. bn3.weight is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for bn3.bias. bn3.bias is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for bn3._mean. bn3._mean is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for bn3._variance. bn3._variance is not found in the provided dict.
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for layer1.0.conv1.weight. layer1.0.conv1.weight receives a shape [64, 64, 1, 1], but the expected shape is [64, 128, 1, 1].
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/fluid/dygraph/layers.py:1303: UserWarning: Skip loading for layer1.0.downsample.0.weight. layer1.0.downsample.0.weight receives a shape [256, 64, 1, 1], but the expected shape is [256, 128, 1, 1].
+  warnings.warn(("Skip loading for {}. ".format(key) + str(err)))
+Resuming from checkpoint checkpoints/psenet_r50_ic15_1024_finetune/checkpoint_530ep.pdparams.
+
+Epoch: [532 | 580]
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/nn/layer/norm.py:648: UserWarning: When training, we now always track global mean and variance.
+  "When training, we now always track global mean and variance.")
+(1/63) LR: 0.000010 | Batch: 6.815s | Total: 0min | ETA: 7min | Loss: 0.669 | Loss(text/kernel): 0.413/0.255 | IoU(text/kernel): 0.022/0.446 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.221s | Total: 2min | ETA: 5min | Loss: 0.694 | Loss(text/kernel): 0.423/0.271 | IoU(text/kernel): 0.016/0.435 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.228s | Total: 5min | ETA: 3min | Loss: 0.698 | Loss(text/kernel): 0.426/0.272 | IoU(text/kernel): 0.017/0.431 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.249s | Total: 7min | ETA: 0min | Loss: 0.700 | Loss(text/kernel): 0.427/0.272 | IoU(text/kernel): 0.017/0.431 | Acc rec: 0.000
+/opt/conda/envs/python35-paddle120-env/lib/python3.7/site-packages/paddle/framework/io.py:252: UserWarning: The input state dict is empty, no need to save.
+  warnings.warn("The input state dict is empty, no need to save.")
+
+Epoch: [533 | 580]
+(1/63) LR: 0.000010 | Batch: 4.129s | Total: 0min | ETA: 4min | Loss: 0.691 | Loss(text/kernel): 0.432/0.260 | IoU(text/kernel): 0.011/0.439 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.185s | Total: 2min | ETA: 5min | Loss: 0.710 | Loss(text/kernel): 0.432/0.278 | IoU(text/kernel): 0.016/0.423 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.210s | Total: 5min | ETA: 3min | Loss: 0.712 | Loss(text/kernel): 0.435/0.277 | IoU(text/kernel): 0.016/0.418 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.230s | Total: 7min | ETA: 0min | Loss: 0.712 | Loss(text/kernel): 0.435/0.277 | IoU(text/kernel): 0.016/0.420 | Acc rec: 0.000
+
+Epoch: [534 | 580]
+(1/63) LR: 0.000010 | Batch: 6.567s | Total: 0min | ETA: 7min | Loss: 0.721 | Loss(text/kernel): 0.431/0.290 | IoU(text/kernel): 0.018/0.451 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.231s | Total: 2min | ETA: 5min | Loss: 0.702 | Loss(text/kernel): 0.428/0.274 | IoU(text/kernel): 0.017/0.422 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.250s | Total: 5min | ETA: 3min | Loss: 0.705 | Loss(text/kernel): 0.430/0.275 | IoU(text/kernel): 0.017/0.422 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.278s | Total: 7min | ETA: 0min | Loss: 0.705 | Loss(text/kernel): 0.431/0.274 | IoU(text/kernel): 0.017/0.425 | Acc rec: 0.000
+
+Epoch: [535 | 580]
+(1/63) LR: 0.000010 | Batch: 4.364s | Total: 0min | ETA: 5min | Loss: 0.678 | Loss(text/kernel): 0.407/0.270 | IoU(text/kernel): 0.022/0.450 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.077s | Total: 2min | ETA: 5min | Loss: 0.714 | Loss(text/kernel): 0.438/0.276 | IoU(text/kernel): 0.017/0.415 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.184s | Total: 5min | ETA: 3min | Loss: 0.714 | Loss(text/kernel): 0.436/0.278 | IoU(text/kernel): 0.018/0.420 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.207s | Total: 7min | ETA: 0min | Loss: 0.711 | Loss(text/kernel): 0.434/0.277 | IoU(text/kernel): 0.017/0.420 | Acc rec: 0.000
+
+Epoch: [536 | 580]
+(1/63) LR: 0.000010 | Batch: 6.848s | Total: 0min | ETA: 7min | Loss: 0.737 | Loss(text/kernel): 0.451/0.287 | IoU(text/kernel): 0.015/0.421 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.283s | Total: 2min | ETA: 5min | Loss: 0.710 | Loss(text/kernel): 0.432/0.278 | IoU(text/kernel): 0.017/0.425 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.303s | Total: 5min | ETA: 3min | Loss: 0.707 | Loss(text/kernel): 0.430/0.277 | IoU(text/kernel): 0.017/0.427 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.301s | Total: 7min | ETA: 0min | Loss: 0.708 | Loss(text/kernel): 0.432/0.276 | IoU(text/kernel): 0.017/0.424 | Acc rec: 0.000
+
+Epoch: [537 | 580]
+(1/63) LR: 0.000010 | Batch: 4.029s | Total: 0min | ETA: 4min | Loss: 0.695 | Loss(text/kernel): 0.421/0.274 | IoU(text/kernel): 0.024/0.447 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.130s | Total: 2min | ETA: 5min | Loss: 0.701 | Loss(text/kernel): 0.423/0.278 | IoU(text/kernel): 0.016/0.434 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.217s | Total: 5min | ETA: 3min | Loss: 0.699 | Loss(text/kernel): 0.422/0.277 | IoU(text/kernel): 0.017/0.437 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.261s | Total: 7min | ETA: 0min | Loss: 0.702 | Loss(text/kernel): 0.425/0.277 | IoU(text/kernel): 0.018/0.433 | Acc rec: 0.000
+
+Epoch: [538 | 580]
+(1/63) LR: 0.000010 | Batch: 6.804s | Total: 0min | ETA: 7min | Loss: 0.677 | Loss(text/kernel): 0.409/0.268 | IoU(text/kernel): 0.012/0.488 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.277s | Total: 2min | ETA: 5min | Loss: 0.706 | Loss(text/kernel): 0.427/0.278 | IoU(text/kernel): 0.016/0.431 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.254s | Total: 5min | ETA: 3min | Loss: 0.711 | Loss(text/kernel): 0.433/0.279 | IoU(text/kernel): 0.017/0.424 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.277s | Total: 7min | ETA: 0min | Loss: 0.710 | Loss(text/kernel): 0.431/0.279 | IoU(text/kernel): 0.017/0.426 | Acc rec: 0.000
+
+Epoch: [539 | 580]
+(1/63) LR: 0.000010 | Batch: 4.053s | Total: 0min | ETA: 4min | Loss: 0.738 | Loss(text/kernel): 0.464/0.274 | IoU(text/kernel): 0.014/0.387 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.139s | Total: 2min | ETA: 5min | Loss: 0.706 | Loss(text/kernel): 0.429/0.277 | IoU(text/kernel): 0.018/0.431 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.220s | Total: 5min | ETA: 3min | Loss: 0.706 | Loss(text/kernel): 0.428/0.277 | IoU(text/kernel): 0.017/0.428 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.260s | Total: 7min | ETA: 0min | Loss: 0.706 | Loss(text/kernel): 0.429/0.277 | IoU(text/kernel): 0.017/0.426 | Acc rec: 0.000
+
+Epoch: [540 | 580]
+(1/63) LR: 0.000010 | Batch: 6.869s | Total: 0min | ETA: 7min | Loss: 0.698 | Loss(text/kernel): 0.420/0.278 | IoU(text/kernel): 0.010/0.436 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.310s | Total: 2min | ETA: 5min | Loss: 0.702 | Loss(text/kernel): 0.424/0.278 | IoU(text/kernel): 0.017/0.427 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.285s | Total: 5min | ETA: 3min | Loss: 0.700 | Loss(text/kernel): 0.424/0.276 | IoU(text/kernel): 0.018/0.429 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.284s | Total: 7min | ETA: 0min | Loss: 0.703 | Loss(text/kernel): 0.427/0.277 | IoU(text/kernel): 0.017/0.427 | Acc rec: 0.000
+
+Epoch: [541 | 580]
+(1/63) LR: 0.000010 | Batch: 4.012s | Total: 0min | ETA: 4min | Loss: 0.704 | Loss(text/kernel): 0.428/0.276 | IoU(text/kernel): 0.027/0.432 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.176s | Total: 2min | ETA: 5min | Loss: 0.707 | Loss(text/kernel): 0.430/0.277 | IoU(text/kernel): 0.018/0.426 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.196s | Total: 5min | ETA: 3min | Loss: 0.707 | Loss(text/kernel): 0.431/0.276 | IoU(text/kernel): 0.017/0.425 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.229s | Total: 7min | ETA: 0min | Loss: 0.706 | Loss(text/kernel): 0.430/0.275 | IoU(text/kernel): 0.018/0.428 | Acc rec: 0.000
+
+Epoch: [542 | 580]
+(1/63) LR: 0.000010 | Batch: 6.776s | Total: 0min | ETA: 7min | Loss: 0.704 | Loss(text/kernel): 0.424/0.280 | IoU(text/kernel): 0.020/0.446 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.374s | Total: 2min | ETA: 5min | Loss: 0.706 | Loss(text/kernel): 0.433/0.273 | IoU(text/kernel): 0.019/0.430 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.345s | Total: 5min | ETA: 3min | Loss: 0.711 | Loss(text/kernel): 0.434/0.277 | IoU(text/kernel): 0.018/0.424 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.341s | Total: 7min | ETA: 0min | Loss: 0.708 | Loss(text/kernel): 0.433/0.275 | IoU(text/kernel): 0.017/0.422 | Acc rec: 0.000
+
+Epoch: [543 | 580]
+(1/63) LR: 0.000010 | Batch: 4.188s | Total: 0min | ETA: 4min | Loss: 0.680 | Loss(text/kernel): 0.414/0.266 | IoU(text/kernel): 0.019/0.486 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.165s | Total: 2min | ETA: 5min | Loss: 0.709 | Loss(text/kernel): 0.433/0.276 | IoU(text/kernel): 0.016/0.424 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.227s | Total: 5min | ETA: 3min | Loss: 0.717 | Loss(text/kernel): 0.439/0.279 | IoU(text/kernel): 0.017/0.417 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.281s | Total: 7min | ETA: 0min | Loss: 0.714 | Loss(text/kernel): 0.434/0.280 | IoU(text/kernel): 0.017/0.421 | Acc rec: 0.000
+
+Epoch: [544 | 580]
+(1/63) LR: 0.000010 | Batch: 6.858s | Total: 0min | ETA: 7min | Loss: 0.743 | Loss(text/kernel): 0.447/0.296 | IoU(text/kernel): 0.020/0.421 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.314s | Total: 2min | ETA: 5min | Loss: 0.707 | Loss(text/kernel): 0.427/0.280 | IoU(text/kernel): 0.017/0.431 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.316s | Total: 5min | ETA: 3min | Loss: 0.705 | Loss(text/kernel): 0.427/0.279 | IoU(text/kernel): 0.018/0.435 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.313s | Total: 7min | ETA: 0min | Loss: 0.704 | Loss(text/kernel): 0.426/0.279 | IoU(text/kernel): 0.018/0.436 | Acc rec: 0.000
+
+Epoch: [545 | 580]
+(1/63) LR: 0.000010 | Batch: 4.153s | Total: 0min | ETA: 4min | Loss: 0.687 | Loss(text/kernel): 0.409/0.278 | IoU(text/kernel): 0.020/0.458 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.196s | Total: 2min | ETA: 5min | Loss: 0.699 | Loss(text/kernel): 0.422/0.277 | IoU(text/kernel): 0.020/0.430 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.248s | Total: 5min | ETA: 3min | Loss: 0.704 | Loss(text/kernel): 0.427/0.278 | IoU(text/kernel): 0.018/0.428 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.276s | Total: 7min | ETA: 0min | Loss: 0.704 | Loss(text/kernel): 0.427/0.277 | IoU(text/kernel): 0.018/0.427 | Acc rec: 0.000
+
+Epoch: [546 | 580]
+(1/63) LR: 0.000010 | Batch: 6.952s | Total: 0min | ETA: 7min | Loss: 0.703 | Loss(text/kernel): 0.431/0.272 | IoU(text/kernel): 0.017/0.450 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.358s | Total: 2min | ETA: 5min | Loss: 0.709 | Loss(text/kernel): 0.431/0.278 | IoU(text/kernel): 0.017/0.425 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.359s | Total: 5min | ETA: 3min | Loss: 0.709 | Loss(text/kernel): 0.431/0.279 | IoU(text/kernel): 0.016/0.425 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.356s | Total: 7min | ETA: 0min | Loss: 0.706 | Loss(text/kernel): 0.430/0.276 | IoU(text/kernel): 0.017/0.423 | Acc rec: 0.000
+
+Epoch: [547 | 580]
+(1/63) LR: 0.000010 | Batch: 4.140s | Total: 0min | ETA: 4min | Loss: 0.692 | Loss(text/kernel): 0.416/0.276 | IoU(text/kernel): 0.013/0.410 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.173s | Total: 2min | ETA: 5min | Loss: 0.705 | Loss(text/kernel): 0.430/0.275 | IoU(text/kernel): 0.018/0.421 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.226s | Total: 5min | ETA: 3min | Loss: 0.709 | Loss(text/kernel): 0.433/0.275 | IoU(text/kernel): 0.017/0.418 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.244s | Total: 7min | ETA: 0min | Loss: 0.709 | Loss(text/kernel): 0.434/0.275 | IoU(text/kernel): 0.017/0.419 | Acc rec: 0.000
+
+Epoch: [548 | 580]
+(1/63) LR: 0.000010 | Batch: 7.130s | Total: 0min | ETA: 7min | Loss: 0.717 | Loss(text/kernel): 0.432/0.284 | IoU(text/kernel): 0.027/0.449 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.357s | Total: 2min | ETA: 5min | Loss: 0.699 | Loss(text/kernel): 0.424/0.275 | IoU(text/kernel): 0.018/0.436 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.337s | Total: 5min | ETA: 3min | Loss: 0.702 | Loss(text/kernel): 0.428/0.274 | IoU(text/kernel): 0.017/0.429 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.340s | Total: 7min | ETA: 0min | Loss: 0.704 | Loss(text/kernel): 0.428/0.275 | IoU(text/kernel): 0.017/0.429 | Acc rec: 0.000
+
+Epoch: [549 | 580]
+(1/63) LR: 0.000010 | Batch: 4.303s | Total: 0min | ETA: 5min | Loss: 0.709 | Loss(text/kernel): 0.431/0.278 | IoU(text/kernel): 0.016/0.445 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.192s | Total: 2min | ETA: 5min | Loss: 0.702 | Loss(text/kernel): 0.426/0.276 | IoU(text/kernel): 0.017/0.427 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.265s | Total: 5min | ETA: 3min | Loss: 0.697 | Loss(text/kernel): 0.423/0.274 | IoU(text/kernel): 0.019/0.433 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.285s | Total: 7min | ETA: 0min | Loss: 0.699 | Loss(text/kernel): 0.423/0.277 | IoU(text/kernel): 0.018/0.434 | Acc rec: 0.000
+
+Epoch: [550 | 580]
+(1/63) LR: 0.000010 | Batch: 6.930s | Total: 0min | ETA: 7min | Loss: 0.680 | Loss(text/kernel): 0.432/0.248 | IoU(text/kernel): 0.024/0.433 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.288s | Total: 2min | ETA: 5min | Loss: 0.710 | Loss(text/kernel): 0.436/0.273 | IoU(text/kernel): 0.017/0.421 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.285s | Total: 5min | ETA: 3min | Loss: 0.714 | Loss(text/kernel): 0.437/0.277 | IoU(text/kernel): 0.017/0.416 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.299s | Total: 7min | ETA: 0min | Loss: 0.707 | Loss(text/kernel): 0.432/0.275 | IoU(text/kernel): 0.018/0.421 | Acc rec: 0.000
+
+Epoch: [551 | 580]
+(1/63) LR: 0.000010 | Batch: 4.080s | Total: 0min | ETA: 4min | Loss: 0.754 | Loss(text/kernel): 0.464/0.290 | IoU(text/kernel): 0.010/0.393 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.148s | Total: 2min | ETA: 5min | Loss: 0.710 | Loss(text/kernel): 0.433/0.277 | IoU(text/kernel): 0.018/0.422 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.249s | Total: 5min | ETA: 3min | Loss: 0.707 | Loss(text/kernel): 0.430/0.277 | IoU(text/kernel): 0.017/0.427 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.252s | Total: 7min | ETA: 0min | Loss: 0.706 | Loss(text/kernel): 0.428/0.278 | IoU(text/kernel): 0.017/0.429 | Acc rec: 0.000
+
+Epoch: [552 | 580]
+(1/63) LR: 0.000010 | Batch: 6.675s | Total: 0min | ETA: 7min | Loss: 0.719 | Loss(text/kernel): 0.445/0.275 | IoU(text/kernel): 0.007/0.379 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.361s | Total: 2min | ETA: 5min | Loss: 0.716 | Loss(text/kernel): 0.437/0.278 | IoU(text/kernel): 0.017/0.416 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.356s | Total: 5min | ETA: 3min | Loss: 0.717 | Loss(text/kernel): 0.438/0.279 | IoU(text/kernel): 0.018/0.414 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.334s | Total: 7min | ETA: 0min | Loss: 0.712 | Loss(text/kernel): 0.435/0.277 | IoU(text/kernel): 0.018/0.420 | Acc rec: 0.000
+
+Epoch: [553 | 580]
+(1/63) LR: 0.000010 | Batch: 4.368s | Total: 0min | ETA: 5min | Loss: 0.724 | Loss(text/kernel): 0.438/0.286 | IoU(text/kernel): 0.011/0.418 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.220s | Total: 2min | ETA: 5min | Loss: 0.706 | Loss(text/kernel): 0.428/0.278 | IoU(text/kernel): 0.017/0.424 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.244s | Total: 5min | ETA: 3min | Loss: 0.702 | Loss(text/kernel): 0.426/0.276 | IoU(text/kernel): 0.018/0.428 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.272s | Total: 7min | ETA: 0min | Loss: 0.702 | Loss(text/kernel): 0.427/0.274 | IoU(text/kernel): 0.018/0.427 | Acc rec: 0.000
+
+Epoch: [554 | 580]
+(1/63) LR: 0.000010 | Batch: 6.901s | Total: 0min | ETA: 7min | Loss: 0.681 | Loss(text/kernel): 0.406/0.275 | IoU(text/kernel): 0.013/0.418 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.281s | Total: 2min | ETA: 5min | Loss: 0.711 | Loss(text/kernel): 0.433/0.278 | IoU(text/kernel): 0.017/0.425 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.253s | Total: 5min | ETA: 3min | Loss: 0.706 | Loss(text/kernel): 0.427/0.279 | IoU(text/kernel): 0.016/0.428 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.281s | Total: 7min | ETA: 0min | Loss: 0.705 | Loss(text/kernel): 0.428/0.277 | IoU(text/kernel): 0.017/0.432 | Acc rec: 0.000
+
+Epoch: [555 | 580]
+(1/63) LR: 0.000010 | Batch: 4.022s | Total: 0min | ETA: 4min | Loss: 0.757 | Loss(text/kernel): 0.474/0.283 | IoU(text/kernel): 0.012/0.356 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.176s | Total: 2min | ETA: 5min | Loss: 0.711 | Loss(text/kernel): 0.432/0.279 | IoU(text/kernel): 0.018/0.433 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.209s | Total: 5min | ETA: 3min | Loss: 0.708 | Loss(text/kernel): 0.429/0.278 | IoU(text/kernel): 0.017/0.435 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.255s | Total: 7min | ETA: 0min | Loss: 0.704 | Loss(text/kernel): 0.428/0.276 | IoU(text/kernel): 0.017/0.433 | Acc rec: 0.000
+
+Epoch: [556 | 580]
+(1/63) LR: 0.000010 | Batch: 6.835s | Total: 0min | ETA: 7min | Loss: 0.693 | Loss(text/kernel): 0.415/0.279 | IoU(text/kernel): 0.016/0.462 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.329s | Total: 2min | ETA: 5min | Loss: 0.708 | Loss(text/kernel): 0.433/0.275 | IoU(text/kernel): 0.017/0.429 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.311s | Total: 5min | ETA: 3min | Loss: 0.707 | Loss(text/kernel): 0.431/0.276 | IoU(text/kernel): 0.017/0.428 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.306s | Total: 7min | ETA: 0min | Loss: 0.708 | Loss(text/kernel): 0.431/0.277 | IoU(text/kernel): 0.017/0.427 | Acc rec: 0.000
+
+Epoch: [557 | 580]
+(1/63) LR: 0.000010 | Batch: 4.049s | Total: 0min | ETA: 4min | Loss: 0.692 | Loss(text/kernel): 0.414/0.278 | IoU(text/kernel): 0.012/0.431 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.083s | Total: 2min | ETA: 5min | Loss: 0.713 | Loss(text/kernel): 0.436/0.277 | IoU(text/kernel): 0.014/0.416 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.221s | Total: 5min | ETA: 3min | Loss: 0.707 | Loss(text/kernel): 0.431/0.276 | IoU(text/kernel): 0.016/0.424 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.262s | Total: 7min | ETA: 0min | Loss: 0.708 | Loss(text/kernel): 0.432/0.276 | IoU(text/kernel): 0.016/0.425 | Acc rec: 0.000
+
+Epoch: [558 | 580]
+(1/63) LR: 0.000010 | Batch: 6.783s | Total: 0min | ETA: 7min | Loss: 0.698 | Loss(text/kernel): 0.426/0.272 | IoU(text/kernel): 0.014/0.441 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.274s | Total: 2min | ETA: 5min | Loss: 0.714 | Loss(text/kernel): 0.437/0.277 | IoU(text/kernel): 0.017/0.420 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.270s | Total: 5min | ETA: 3min | Loss: 0.706 | Loss(text/kernel): 0.430/0.276 | IoU(text/kernel): 0.016/0.429 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.280s | Total: 7min | ETA: 0min | Loss: 0.705 | Loss(text/kernel): 0.428/0.276 | IoU(text/kernel): 0.017/0.430 | Acc rec: 0.000
+
+Epoch: [559 | 580]
+(1/63) LR: 0.000010 | Batch: 4.375s | Total: 0min | ETA: 5min | Loss: 0.693 | Loss(text/kernel): 0.427/0.266 | IoU(text/kernel): 0.019/0.438 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.191s | Total: 2min | ETA: 5min | Loss: 0.700 | Loss(text/kernel): 0.425/0.275 | IoU(text/kernel): 0.019/0.428 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.214s | Total: 5min | ETA: 3min | Loss: 0.699 | Loss(text/kernel): 0.425/0.274 | IoU(text/kernel): 0.018/0.430 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.251s | Total: 7min | ETA: 0min | Loss: 0.705 | Loss(text/kernel): 0.430/0.275 | IoU(text/kernel): 0.017/0.426 | Acc rec: 0.000
+
+Epoch: [560 | 580]
+(1/63) LR: 0.000010 | Batch: 7.221s | Total: 0min | ETA: 8min | Loss: 0.697 | Loss(text/kernel): 0.413/0.283 | IoU(text/kernel): 0.021/0.429 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.367s | Total: 2min | ETA: 5min | Loss: 0.716 | Loss(text/kernel): 0.438/0.278 | IoU(text/kernel): 0.016/0.412 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.338s | Total: 5min | ETA: 3min | Loss: 0.710 | Loss(text/kernel): 0.434/0.276 | IoU(text/kernel): 0.016/0.420 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.346s | Total: 7min | ETA: 0min | Loss: 0.708 | Loss(text/kernel): 0.432/0.275 | IoU(text/kernel): 0.017/0.422 | Acc rec: 0.000
+
+Epoch: [561 | 580]
+(1/63) LR: 0.000010 | Batch: 4.050s | Total: 0min | ETA: 4min | Loss: 0.714 | Loss(text/kernel): 0.421/0.292 | IoU(text/kernel): 0.023/0.448 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.230s | Total: 2min | ETA: 5min | Loss: 0.705 | Loss(text/kernel): 0.426/0.279 | IoU(text/kernel): 0.017/0.439 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.291s | Total: 5min | ETA: 3min | Loss: 0.711 | Loss(text/kernel): 0.433/0.277 | IoU(text/kernel): 0.017/0.424 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.292s | Total: 7min | ETA: 0min | Loss: 0.714 | Loss(text/kernel): 0.436/0.277 | IoU(text/kernel): 0.017/0.421 | Acc rec: 0.000
+
+Epoch: [562 | 580]
+(1/63) LR: 0.000010 | Batch: 6.852s | Total: 0min | ETA: 7min | Loss: 0.677 | Loss(text/kernel): 0.410/0.268 | IoU(text/kernel): 0.020/0.477 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.314s | Total: 2min | ETA: 5min | Loss: 0.705 | Loss(text/kernel): 0.430/0.275 | IoU(text/kernel): 0.018/0.427 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.344s | Total: 5min | ETA: 3min | Loss: 0.703 | Loss(text/kernel): 0.428/0.275 | IoU(text/kernel): 0.018/0.427 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.308s | Total: 7min | ETA: 0min | Loss: 0.702 | Loss(text/kernel): 0.428/0.274 | IoU(text/kernel): 0.018/0.427 | Acc rec: 0.000
+
+Epoch: [563 | 580]
+(1/63) LR: 0.000010 | Batch: 4.145s | Total: 0min | ETA: 4min | Loss: 0.728 | Loss(text/kernel): 0.431/0.297 | IoU(text/kernel): 0.017/0.447 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.064s | Total: 2min | ETA: 5min | Loss: 0.711 | Loss(text/kernel): 0.430/0.281 | IoU(text/kernel): 0.017/0.430 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.188s | Total: 5min | ETA: 3min | Loss: 0.708 | Loss(text/kernel): 0.431/0.277 | IoU(text/kernel): 0.018/0.429 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.225s | Total: 7min | ETA: 0min | Loss: 0.707 | Loss(text/kernel): 0.432/0.275 | IoU(text/kernel): 0.018/0.423 | Acc rec: 0.000
+
+Epoch: [564 | 580]
+(1/63) LR: 0.000010 | Batch: 6.851s | Total: 0min | ETA: 7min | Loss: 0.696 | Loss(text/kernel): 0.410/0.286 | IoU(text/kernel): 0.008/0.422 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.223s | Total: 2min | ETA: 5min | Loss: 0.703 | Loss(text/kernel): 0.430/0.274 | IoU(text/kernel): 0.017/0.432 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.263s | Total: 5min | ETA: 3min | Loss: 0.702 | Loss(text/kernel): 0.427/0.275 | IoU(text/kernel): 0.017/0.433 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.277s | Total: 7min | ETA: 0min | Loss: 0.702 | Loss(text/kernel): 0.427/0.274 | IoU(text/kernel): 0.018/0.432 | Acc rec: 0.000
+
+Epoch: [565 | 580]
+(1/63) LR: 0.000010 | Batch: 4.131s | Total: 0min | ETA: 4min | Loss: 0.676 | Loss(text/kernel): 0.419/0.256 | IoU(text/kernel): 0.023/0.442 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.162s | Total: 2min | ETA: 5min | Loss: 0.712 | Loss(text/kernel): 0.439/0.273 | IoU(text/kernel): 0.017/0.414 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.228s | Total: 5min | ETA: 3min | Loss: 0.708 | Loss(text/kernel): 0.434/0.275 | IoU(text/kernel): 0.017/0.419 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.282s | Total: 7min | ETA: 0min | Loss: 0.708 | Loss(text/kernel): 0.432/0.276 | IoU(text/kernel): 0.018/0.424 | Acc rec: 0.000
+
+Epoch: [566 | 580]
+(1/63) LR: 0.000010 | Batch: 6.972s | Total: 0min | ETA: 7min | Loss: 0.670 | Loss(text/kernel): 0.383/0.287 | IoU(text/kernel): 0.019/0.476 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.232s | Total: 2min | ETA: 5min | Loss: 0.709 | Loss(text/kernel): 0.432/0.277 | IoU(text/kernel): 0.016/0.414 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.272s | Total: 5min | ETA: 3min | Loss: 0.707 | Loss(text/kernel): 0.431/0.276 | IoU(text/kernel): 0.017/0.421 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.303s | Total: 7min | ETA: 0min | Loss: 0.708 | Loss(text/kernel): 0.431/0.276 | IoU(text/kernel): 0.017/0.422 | Acc rec: 0.000
+
+Epoch: [567 | 580]
+(1/63) LR: 0.000010 | Batch: 4.084s | Total: 0min | ETA: 4min | Loss: 0.676 | Loss(text/kernel): 0.402/0.273 | IoU(text/kernel): 0.029/0.474 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.214s | Total: 2min | ETA: 5min | Loss: 0.703 | Loss(text/kernel): 0.426/0.277 | IoU(text/kernel): 0.017/0.436 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.305s | Total: 5min | ETA: 3min | Loss: 0.708 | Loss(text/kernel): 0.431/0.277 | IoU(text/kernel): 0.017/0.426 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.308s | Total: 7min | ETA: 0min | Loss: 0.708 | Loss(text/kernel): 0.430/0.278 | IoU(text/kernel): 0.017/0.430 | Acc rec: 0.000
+
+Epoch: [568 | 580]
+(1/63) LR: 0.000010 | Batch: 6.861s | Total: 0min | ETA: 7min | Loss: 0.664 | Loss(text/kernel): 0.401/0.263 | IoU(text/kernel): 0.020/0.474 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.336s | Total: 2min | ETA: 5min | Loss: 0.700 | Loss(text/kernel): 0.429/0.271 | IoU(text/kernel): 0.017/0.429 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.320s | Total: 5min | ETA: 3min | Loss: 0.701 | Loss(text/kernel): 0.427/0.274 | IoU(text/kernel): 0.018/0.429 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.303s | Total: 7min | ETA: 0min | Loss: 0.700 | Loss(text/kernel): 0.425/0.274 | IoU(text/kernel): 0.017/0.430 | Acc rec: 0.000
+
+Epoch: [569 | 580]
+(1/63) LR: 0.000010 | Batch: 4.091s | Total: 0min | ETA: 4min | Loss: 0.733 | Loss(text/kernel): 0.444/0.289 | IoU(text/kernel): 0.017/0.425 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.184s | Total: 2min | ETA: 5min | Loss: 0.706 | Loss(text/kernel): 0.429/0.277 | IoU(text/kernel): 0.017/0.428 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.254s | Total: 5min | ETA: 3min | Loss: 0.704 | Loss(text/kernel): 0.426/0.278 | IoU(text/kernel): 0.017/0.431 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.265s | Total: 7min | ETA: 0min | Loss: 0.705 | Loss(text/kernel): 0.428/0.277 | IoU(text/kernel): 0.017/0.430 | Acc rec: 0.000
+
+Epoch: [570 | 580]
+(1/63) LR: 0.000010 | Batch: 7.128s | Total: 0min | ETA: 7min | Loss: 0.690 | Loss(text/kernel): 0.433/0.257 | IoU(text/kernel): 0.020/0.423 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.335s | Total: 2min | ETA: 5min | Loss: 0.709 | Loss(text/kernel): 0.430/0.279 | IoU(text/kernel): 0.014/0.416 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.335s | Total: 5min | ETA: 3min | Loss: 0.706 | Loss(text/kernel): 0.428/0.278 | IoU(text/kernel): 0.016/0.427 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.331s | Total: 7min | ETA: 0min | Loss: 0.703 | Loss(text/kernel): 0.426/0.277 | IoU(text/kernel): 0.016/0.431 | Acc rec: 0.000
+
+Epoch: [571 | 580]
+(1/63) LR: 0.000010 | Batch: 4.317s | Total: 0min | ETA: 5min | Loss: 0.688 | Loss(text/kernel): 0.420/0.268 | IoU(text/kernel): 0.020/0.450 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.130s | Total: 2min | ETA: 5min | Loss: 0.711 | Loss(text/kernel): 0.431/0.280 | IoU(text/kernel): 0.017/0.436 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.247s | Total: 5min | ETA: 3min | Loss: 0.705 | Loss(text/kernel): 0.428/0.278 | IoU(text/kernel): 0.017/0.437 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.276s | Total: 7min | ETA: 0min | Loss: 0.706 | Loss(text/kernel): 0.428/0.277 | IoU(text/kernel): 0.017/0.430 | Acc rec: 0.000
+
+Epoch: [572 | 580]
+(1/63) LR: 0.000010 | Batch: 6.921s | Total: 0min | ETA: 7min | Loss: 0.714 | Loss(text/kernel): 0.429/0.284 | IoU(text/kernel): 0.016/0.452 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.347s | Total: 2min | ETA: 5min | Loss: 0.704 | Loss(text/kernel): 0.429/0.275 | IoU(text/kernel): 0.016/0.428 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.368s | Total: 5min | ETA: 3min | Loss: 0.706 | Loss(text/kernel): 0.431/0.274 | IoU(text/kernel): 0.017/0.426 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.346s | Total: 7min | ETA: 0min | Loss: 0.711 | Loss(text/kernel): 0.436/0.275 | IoU(text/kernel): 0.017/0.420 | Acc rec: 0.000
+
+Epoch: [573 | 580]
+(1/63) LR: 0.000010 | Batch: 4.184s | Total: 0min | ETA: 4min | Loss: 0.703 | Loss(text/kernel): 0.435/0.268 | IoU(text/kernel): 0.015/0.459 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.134s | Total: 2min | ETA: 5min | Loss: 0.706 | Loss(text/kernel): 0.434/0.272 | IoU(text/kernel): 0.016/0.421 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.225s | Total: 5min | ETA: 3min | Loss: 0.706 | Loss(text/kernel): 0.433/0.273 | IoU(text/kernel): 0.017/0.423 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.271s | Total: 7min | ETA: 0min | Loss: 0.707 | Loss(text/kernel): 0.434/0.273 | IoU(text/kernel): 0.017/0.424 | Acc rec: 0.000
+
+Epoch: [574 | 580]
+(1/63) LR: 0.000010 | Batch: 7.190s | Total: 0min | ETA: 8min | Loss: 0.708 | Loss(text/kernel): 0.429/0.279 | IoU(text/kernel): 0.013/0.415 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.386s | Total: 2min | ETA: 5min | Loss: 0.714 | Loss(text/kernel): 0.437/0.277 | IoU(text/kernel): 0.018/0.420 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.364s | Total: 5min | ETA: 3min | Loss: 0.709 | Loss(text/kernel): 0.431/0.278 | IoU(text/kernel): 0.017/0.427 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.354s | Total: 7min | ETA: 0min | Loss: 0.707 | Loss(text/kernel): 0.429/0.278 | IoU(text/kernel): 0.017/0.431 | Acc rec: 0.000
+
+Epoch: [575 | 580]
+(1/63) LR: 0.000010 | Batch: 4.191s | Total: 0min | ETA: 4min | Loss: 0.675 | Loss(text/kernel): 0.401/0.274 | IoU(text/kernel): 0.020/0.476 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.146s | Total: 2min | ETA: 5min | Loss: 0.707 | Loss(text/kernel): 0.429/0.278 | IoU(text/kernel): 0.017/0.434 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.243s | Total: 5min | ETA: 3min | Loss: 0.708 | Loss(text/kernel): 0.430/0.278 | IoU(text/kernel): 0.016/0.430 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.285s | Total: 7min | ETA: 0min | Loss: 0.707 | Loss(text/kernel): 0.430/0.278 | IoU(text/kernel): 0.017/0.427 | Acc rec: 0.000
+
+Epoch: [576 | 580]
+(1/63) LR: 0.000010 | Batch: 7.215s | Total: 0min | ETA: 8min | Loss: 0.728 | Loss(text/kernel): 0.449/0.279 | IoU(text/kernel): 0.016/0.384 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.372s | Total: 2min | ETA: 5min | Loss: 0.705 | Loss(text/kernel): 0.428/0.276 | IoU(text/kernel): 0.018/0.426 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.345s | Total: 5min | ETA: 3min | Loss: 0.704 | Loss(text/kernel): 0.428/0.275 | IoU(text/kernel): 0.018/0.425 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.314s | Total: 7min | ETA: 0min | Loss: 0.704 | Loss(text/kernel): 0.429/0.275 | IoU(text/kernel): 0.017/0.427 | Acc rec: 0.000
+
+Epoch: [577 | 580]
+(1/63) LR: 0.000010 | Batch: 4.309s | Total: 0min | ETA: 5min | Loss: 0.718 | Loss(text/kernel): 0.427/0.291 | IoU(text/kernel): 0.013/0.456 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.214s | Total: 2min | ETA: 5min | Loss: 0.711 | Loss(text/kernel): 0.432/0.279 | IoU(text/kernel): 0.017/0.428 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.233s | Total: 5min | ETA: 3min | Loss: 0.711 | Loss(text/kernel): 0.433/0.278 | IoU(text/kernel): 0.017/0.428 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.270s | Total: 7min | ETA: 0min | Loss: 0.707 | Loss(text/kernel): 0.431/0.276 | IoU(text/kernel): 0.017/0.428 | Acc rec: 0.000
+
+Epoch: [578 | 580]
+(1/63) LR: 0.000010 | Batch: 7.077s | Total: 0min | ETA: 7min | Loss: 0.674 | Loss(text/kernel): 0.406/0.268 | IoU(text/kernel): 0.025/0.444 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.310s | Total: 2min | ETA: 5min | Loss: 0.698 | Loss(text/kernel): 0.420/0.279 | IoU(text/kernel): 0.017/0.434 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.319s | Total: 5min | ETA: 3min | Loss: 0.697 | Loss(text/kernel): 0.419/0.278 | IoU(text/kernel): 0.017/0.432 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.326s | Total: 7min | ETA: 0min | Loss: 0.696 | Loss(text/kernel): 0.420/0.276 | IoU(text/kernel): 0.018/0.433 | Acc rec: 0.000
+
+Epoch: [579 | 580]
+(1/63) LR: 0.000010 | Batch: 4.109s | Total: 0min | ETA: 4min | Loss: 0.688 | Loss(text/kernel): 0.404/0.283 | IoU(text/kernel): 0.012/0.462 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.169s | Total: 2min | ETA: 5min | Loss: 0.701 | Loss(text/kernel): 0.424/0.277 | IoU(text/kernel): 0.016/0.427 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.247s | Total: 5min | ETA: 3min | Loss: 0.703 | Loss(text/kernel): 0.428/0.275 | IoU(text/kernel): 0.017/0.426 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.297s | Total: 7min | ETA: 0min | Loss: 0.699 | Loss(text/kernel): 0.425/0.275 | IoU(text/kernel): 0.017/0.431 | Acc rec: 0.000
+
+Epoch: [580 | 580]
+(1/63) LR: 0.000010 | Batch: 6.879s | Total: 0min | ETA: 7min | Loss: 0.744 | Loss(text/kernel): 0.452/0.292 | IoU(text/kernel): 0.013/0.421 | Acc rec: 0.000
+(21/63) LR: 0.000010 | Batch: 7.304s | Total: 2min | ETA: 5min | Loss: 0.707 | Loss(text/kernel): 0.430/0.277 | IoU(text/kernel): 0.017/0.434 | Acc rec: 0.000
+(41/63) LR: 0.000010 | Batch: 7.293s | Total: 5min | ETA: 3min | Loss: 0.707 | Loss(text/kernel): 0.429/0.278 | IoU(text/kernel): 0.017/0.435 | Acc rec: 0.000
+(61/63) LR: 0.000010 | Batch: 7.310s | Total: 7min | ETA: 0min | Loss: 0.707 | Loss(text/kernel): 0.430/0.276 | IoU(text/kernel): 0.018/0.430 | Acc rec: 0.000

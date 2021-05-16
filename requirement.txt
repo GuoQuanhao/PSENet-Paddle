@@ -1,0 +1,6 @@
+paddlepaddle-gpu==2.0.2
+mmcv
+editdistance
+Polygon3
+pyclipper
+Cython
